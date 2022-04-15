@@ -2,29 +2,33 @@ from rest_framework import serializers
 from apps.users.models import User
 
 
-class UserSerializer(serializers.ModelSerializer):
-
+class UserTokenSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = '__all__'
+        fields = ("username", "name", "last_name", "email")
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = "__all__"
         # Cuando se utiliza exclude no se utiliza fields y viceversa
 
     def create(self, validated_data):
         user = User(**validated_data)
-        user.set_password(validated_data['password'])
+        user.set_password(validated_data["password"])
         user.save()
         return user
 
     def update(self, instance, validated_data):
         updated_user = super().update(instance, validated_data)
-        updated_user.set_password(validated_data['password'])
+        updated_user.set_password(validated_data["password"])
         updated_user.save()
 
         return updated_user
 
 
 class UserListSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = User
 
@@ -32,14 +36,14 @@ class UserListSerializer(serializers.ModelSerializer):
         # data = super().to_representation(instance)
         # print(instance)
         return {
-            'id': instance['id'],
-            'username': instance['username'],
-            'email': instance['email'],
-            'password': instance['password'],
+            "id": instance["id"],
+            "username": instance["username"],
+            "email": instance["email"],
+            "password": instance["password"],
         }
 
 
-'''
+"""
 class TestUserSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=200)
     email = serializers.EmailField()
@@ -75,4 +79,4 @@ class TestUserSerializer(serializers.Serializer):
         instance.save()
         return instance
         
-'''
+"""
