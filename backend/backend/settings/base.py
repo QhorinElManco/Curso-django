@@ -47,13 +47,17 @@ THIRD_APPS = [
     "rest_framework.authtoken",
     "simple_history",
     "drf_yasg",
+    "corsheaders",
 ]
 
 INSTALLED_APPS = BASE_APPS + LOCAL_APPS + THIRD_APPS
 
 SWAGGER_SETTINGS = {"DOC_EXPANSION": "none"}
 
+TOKEN_EXPIRED_AFTER_SECONDS = 900
+
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -103,6 +107,10 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL = "users.User"
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
 
 
 # Internationalization
