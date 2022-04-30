@@ -6,12 +6,12 @@ from apps.products.models import Product, CategoryProduct, MeasureUnit
 
 @admin.register(MeasureUnit)
 class MeasureUnitAdmin(admin.ModelAdmin):
-    list_display = ('id', 'description')
+    list_display = ("id", "description")
 
 
 @admin.register(CategoryProduct)
 class CategoryProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'description')
+    list_display = ("id", "description")
 
 
 # Register your models here.

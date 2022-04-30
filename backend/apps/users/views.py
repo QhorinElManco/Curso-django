@@ -8,18 +8,21 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from apps.users.api.serializer import UserTokenSerializer
+from apps.users.authentication_mixins import Authentication
 
 
-class UserToken(APIView):
+class UserToken(Authentication, APIView):
+
+    """VALIDATE TOKEN"""
+
     def get(self, request, *args, **kwargs):
-        username = request.GET.get("username")
+        # username = request.GET.get("username")
         try:
-            user_token = Token.objects.get(
-                user=UserTokenSerializer()
-                .Meta.model.objects.filter(username=username)
-                .first()
+            user_token, _ = Token.objects.get_or_create(user=self.user)
+            user = UserTokenSerializer(self.user)
+            return Response(
+                {"token": user_token.key, "user": user.data}, status=status.HTTP_200_OK
             )
-            return Response({"token": user_token.key}, status=status.HTTP_200_OK)
         except:
             return Response(
                 {"error": "Credenciales enviadas son incorrectas"},
@@ -50,7 +53,7 @@ class Login(ObtainAuthToken):
 
                     # CASO DE USO BORRAR SESIONES #
                     """Si inicia sesión en otro dispositivo o pestaña cierra las sesiones activas"""
-                    """
+
                     all_sessions = Session.objects.filter(
                         expire_date__gte=datetime.now()
                     )
@@ -68,14 +71,14 @@ class Login(ObtainAuthToken):
                             "message": "Token creado exitosamente",
                         },
                         status=status.HTTP_201_CREATED,
-                    )"""
+                    )
 
                     # CASO DE USO DE SESIONES #
                     """ No deja iniciar sesión en caso de que ya haya una sesión abierta """
-                    return Response(
+                    """return Response(
                         {"Error": "Ya hay una sesión iniciada con este usuario"},
                         status=status.HTTP_409_CONFLICT,
-                    )
+                    )"""
             else:
                 return Response(
                     {"message": "Este usuario no puede iniciar sesión"},

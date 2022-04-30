@@ -9,9 +9,6 @@ from django.conf import settings
 
 
 class ExpiredTokenAuthentication(TokenAuthentication):
-
-    expired = False
-
     def expires_in(self, token):
         time_elapsed = timezone.now() - token.created
         left_time = (
@@ -25,37 +22,21 @@ class ExpiredTokenAuthentication(TokenAuthentication):
     def token_expired_handler(self, token):
         is_expire = self.is_token_expired(token)
         if is_expire:
-            print("Token expirado")
-            # CASO DE USO TOKEN EXPIRADO #
-            # VOLVER A INICIAR SESION #
-
-            # REFRESCAR TOKEN #
-
             user = token.user
             token.delete()
             token = self.get_model().objects.create(user=user)
-            self.expired = True
 
         return is_expire, token
 
     def authenticate_credentials(self, key):
 
-        message, token, user = None, None, None
+        user = None
 
         try:
             token = self.get_model().objects.select_related("user").get(key=key)
+            token = self.token_expired_handler(token)
             user = token.user
         except self.get_model().DoesNotExist:
-            message = "Token inválido"
-            self.expired = True
+            pass
 
-        if token is not None:
-
-            if not token.user.is_active:
-                message = "Usuario no activo o eliminado"
-
-            is_expired = self.token_expired_handler(token)
-            if is_expired:
-                message = "Su token ha expirado"
-
-        return (token, user, message, self.expired)
+        return user

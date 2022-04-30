@@ -56,6 +56,13 @@ SWAGGER_SETTINGS = {"DOC_EXPANSION": "none"}
 
 TOKEN_EXPIRED_AFTER_SECONDS = 900
 
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "apps.users.authentication_mixins.Authentication"
+    ]
+}
+
+
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",

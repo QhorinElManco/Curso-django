@@ -6,7 +6,7 @@ from apps.users.authentication_mixins import Authentication
 '''"ms-python.python"'''
 
 
-class ProductViewSet(Authentication, viewsets.ModelViewSet):
+class ProductViewSet(viewsets.ModelViewSet):
 
     serializer_class = ProductSerializer
 
