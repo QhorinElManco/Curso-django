@@ -1,7 +1,8 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
+
+# from rest_framework.permissions import IsAuthenticated
 from apps.products.api.serializers.product_serializer import ProductSerializer
-from apps.users.authentication_mixins import Authentication
 
 '''"ms-python.python"'''
 
@@ -9,6 +10,8 @@ from apps.users.authentication_mixins import Authentication
 class ProductViewSet(viewsets.ModelViewSet):
 
     serializer_class = ProductSerializer
+    """ La autenticacion de paso a ser configurada de forma global """
+    # permission_classes = (IsAuthenticated,)
 
     def get_queryset(self, pk=None):
         if pk is None:
